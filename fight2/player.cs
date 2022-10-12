@@ -34,7 +34,7 @@ public class Player{
     }
 
     public void DebugPrntStats(){
-        Console.WriteLine(name + "\n" + hp + "\n" + stun + "\n" + stuntms + "\n" + block + "\n" + atk.atkq + "\n" + atk.atkt + "\n" + atk.atkr + "\n" + atk.atkc + "\n" + healCD + "\n" + parryGrace + "\n" + deltaTime);
+        Console.WriteLine("name " + name + "\nhp " + hp + "\nstun " + stun + "\nstunTimes " + stuntms + "\nblock " + block + "\natk.check " + atk.atkq + "\natk.type " + atk.atkt + "\natk.rampUp " + atk.atkr + "\natk.coolDown " + atk.atkc + "\nhealCoolDown " + healCD + "\nparryGrace " + parryGrace + "\ndeltaTime " + deltaTime +"      ");
     }
 
     public void PlayerTick(Player target, double time){
@@ -47,7 +47,7 @@ public class Player{
         }
         stuntms = 0;
         if(atk.atkq){  //atk logic
-            if(atk.atkr >= 0){
+            if(atk.atkr > 0){
                 atk.atkr -= deltaTime;
                 if(atk.atkr < 0) atk.atkr = 0;  //if less than 0 then it should be 0
             } else {
@@ -62,7 +62,7 @@ public class Player{
         }
         healCD -= healCD > 0 ? deltaTime : 0;
         if(healCD <= 0 && hp < 8){
-            hp += 2000/deltaTime;
+            hp += deltaTime/1000;
         }
     }
 
@@ -88,15 +88,15 @@ public class Player{
         double conmod = (5f/con);
         dmg = dmg*conmod;
         if(!atk.atkq){ //if you arn't pre-attack, become stunned by damage
-            double tempStun = dmg*100; //stunticks calculated
+            double tempStun = dmg*10; //stunticks calculated
             tempStun = (tempStun/5) * (5 - stuntms); //if you're being comboed, take less stun. Up to 80% less
             stun += tempStun;
             if(stuntms < 4) stuntms++;
         } 
-        healCD = 2;
+        healCD = 2000;
         hp = hp - dmg;
-        if(hp < 0) hp = 0;
+        if(hp < 0) {
+            hp = 0;
+        }
     }
-
-
 }
